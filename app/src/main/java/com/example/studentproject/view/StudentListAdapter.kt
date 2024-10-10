@@ -1,11 +1,17 @@
 package com.example.studentproject.view
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentproject.databinding.StudentListItemBinding
 import com.example.studentproject.model.Student
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import java.lang.Exception
+import kotlin.math.log
 
 class StudentListAdapter(val studentList: ArrayList<Student>):
     RecyclerView.Adapter<StudentListAdapter.StudentViewHolder>(){
@@ -17,6 +23,23 @@ class StudentListAdapter(val studentList: ArrayList<Student>):
     }
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
+        //load gambar
+        val picasso = Picasso.Builder(holder.itemView.context)
+        picasso.listener{picasso, uri, exception ->
+            exception.printStackTrace()
+        }
+        picasso.build().load(studentList[position].photoUrl).into(holder.binding.imgProfile, object:Callback{
+            override fun onSuccess() {
+                holder.binding.imgProfile.visibility = View.VISIBLE
+                holder.binding.progressImg.visibility = View.GONE
+            }
+
+            override fun onError(e: Exception?) {
+                Log.e("PicassoError", e.toString())
+            }
+
+        })
+
         holder.binding.txtId.text = studentList[position].id
         holder.binding.txtName.text = studentList[position].name
 

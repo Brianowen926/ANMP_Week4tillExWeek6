@@ -12,11 +12,17 @@ import com.example.studentproject.databinding.FragmentStudentDetailBinding
 import com.example.studentproject.databinding.FragmentStudentListBinding
 import com.example.studentproject.model.Student
 import com.example.studentproject.viewmodel.DetailViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 
 class StudentDetailFragment : Fragment() {
     private lateinit var binding:FragmentStudentDetailBinding
     private lateinit var viewModel:DetailViewModel
+    private lateinit var student:Student
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,9 +40,16 @@ class StudentDetailFragment : Fragment() {
         val phone = arguments?.getString("phone") //kalo pake argumen di nav
         val id = arguments?.getString("id") //kalo pake argumen di nav
         val bod = arguments?.getString("bod") //kalo pake argumen di nav
+        student = Student(id, name, bod, phone,null)
 
-        val student = Student(id, name, bod, phone, "") //kalo pake argumen di nav
-
+        //munculin notifikasi + rxjava
+        binding.btnUpdate.setOnClickListener{
+            Observable.timer(5, TimeUnit.SECONDS).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe{
+                    MainActivity.showNotification("Coba", "Bla bla", R.drawable.ic_launcher_foreground)
+                }
+        }
         viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
         viewModel.fetch(student)
 
