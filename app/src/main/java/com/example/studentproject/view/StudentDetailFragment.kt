@@ -40,7 +40,8 @@ class StudentDetailFragment : Fragment() {
         val phone = arguments?.getString("phone") //kalo pake argumen di nav
         val id = arguments?.getString("id") //kalo pake argumen di nav
         val bod = arguments?.getString("bod") //kalo pake argumen di nav
-        student = Student(id, name, bod, phone,null)
+        val photo = arguments?.getString("url") //kalo pake argumen di nav
+        student = Student(id, name, bod, phone,photo)
 
         //munculin notifikasi + rxjava
         binding.btnUpdate.setOnClickListener{
@@ -57,12 +58,17 @@ class StudentDetailFragment : Fragment() {
     }
 
     fun obserViewModel(){
+
         viewModel.studentLD.observe(viewLifecycleOwner, Observer {
-            binding.txtName.setText(it.name)
-            binding.txtBOD.setText(it.bod)
-            binding.txtPhone.setText(it.phone)
-            binding.txtId.setText(it.id)
+            binding.student=it
         })
+
+//        viewModel.studentLD.observe(viewLifecycleOwner, Observer {
+//            binding.txtName.setText(it.name)
+//            binding.txtBOD.setText(it.bod)
+//            binding.txtPhone.setText(it.phone)
+//            binding.txtId.setText(it.id)
+//        })
     }
 
 }
